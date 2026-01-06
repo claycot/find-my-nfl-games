@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Find My NFL Games | Results</title>
+</head>
+<body>
+	<h1>Results</h1>
+	<p>You selected: <span id="coords"></span></p>
+
+	<script>
+		const queryString = window.location.search;
+
+		const urlParams = new URLSearchParams(queryString);
+		
+		if (urlParams.size !== 1) {
+			throw new Error("Incorrect number of parameters.");
+		}
+		
+		const coords = urlParams.keys().next().value.split(",");
+
+		if (coords.length !== 2) {
+			throw new Error("Failed to process coordinates.");
+		}
+
+		document.getElementById("coords").textContent = [...coords];
+	</script>
+</body>
+</html>
