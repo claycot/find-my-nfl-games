@@ -1,2 +1,3 @@
 s3/*
 lambda_api/find-my-nfl-games-api/*
+lambda_loader/venv/*
