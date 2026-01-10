@@ -189,7 +189,7 @@ def save_broadcast_section(section: dict):
             "day": "Sunday",
             "time": time,
             "matchup": game["matchup"],
-            "locatino": None,
+            "location": None,
             "broadcast": network,
             "announcers": game["announcers"]
         }
