@@ -12,7 +12,7 @@ class GameInfo(TypedDict):
     broadcast: str
     announcers: str
 
-def main():
+def main() -> list[GameInfo]:
     # Temp dir that mirrors s3
     map_dir_str = '../s3/2025/week_18'
     map_dir = Path(map_dir_str)
@@ -53,13 +53,28 @@ def main():
             raw_legend = json.load(file)
             # convert string keys to tuple
             legend = {tuple(map(int, k.strip("()").split(","))): v for k, v in raw_legend.items()}
-        print(legend)
 
         found_game = find_local_game((x, y), pixels, img.size, legend)
         if found_game:
             games.append(found_game)
 
-    print(games)
+    # sort and return games
+    DAY_ORDER = {
+        'Tuesday': 0, 
+        'Wednesday': 1, 
+        'Thursday': 2,
+        'Friday': 3, 
+        'Saturday': 4, 
+        'Sunday': 5, 
+        'Monday': 6, 
+    }
+
+    sorted_games = sorted(games, key=lambda game: DAY_ORDER.get(game["day"]))
+
+    with open("games.json", "w", encoding="utf-8") as f:
+        json.dump(sorted_games, f, indent=2)
+
+    return(sorted_games)
 
 
 def find_local_game(
@@ -82,7 +97,7 @@ def find_local_game(
         found_game = search_nearby_pixels(coordinates, pixels, dimensions, legend)
 
     # Print the result
-    print(f"Found a local game at {(cx, cy)}: {found_game}")
+    # print(f"Found a local game at {(cx, cy)}: {found_game}")
     return found_game
 
 
@@ -113,7 +128,7 @@ def search_nearby_pixels(
 
                 if pixel in legend:
                     found_game = legend[pixel]
-                    print(f"found game {found_game} at radius {radius}")
+                    # print(f"found game {found_game} at radius {radius}")
                     return found_game
 
     print(f"did not find game after searching up to radius {search_radius_limit}")

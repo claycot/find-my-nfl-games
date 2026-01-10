@@ -2,10 +2,27 @@
 <html>
 <head>
 	<title>Find My NFL Games | Results</title>
+	<link rel="stylesheet" href="results.css">
 </head>
 <body>
 	<h1>Results</h1>
 	<p>You selected: <span id="coords"></span></p>
+
+	<div class="table-container">
+		<table id="games-table">
+			<thead>
+				<tr>
+					<th>Day</th>
+					<th>Time</th>
+					<th>Matchup</th>
+					<th>Broadcast</th>
+					<th>Announcers</th>
+					<th>Location (if not home)</th>
+				</tr>
+			</thead>
+			<tbody></tbody>
+		</table>
+	</div>
 
 	<script>
 		const queryString = window.location.search;
@@ -23,6 +40,41 @@
 		}
 
 		document.getElementById("coords").textContent = [...coords];
+
+		const isDev = location.hostname === "localhost";
+
+		const url = isDev
+		? "/mocks/games.json"
+		: "https://api.example.com/data";
+
+		fetch(url)
+			.then(res => res.json())
+			.then(data => {
+				const tbody = document.querySelector("#games-table tbody");
+
+				data.forEach(game => {
+				const tr = document.createElement("tr");
+
+				const cells = [
+					game.day,
+					game.time,
+					game.matchup,
+					game.broadcast,
+					game.announcers ?? "",
+					game.location ?? "",
+				];
+
+				cells.forEach(value => {
+					const td = document.createElement("td");
+					td.textContent = value;
+					tr.appendChild(td);
+				});
+
+				tbody.appendChild(tr);
+				});
+			})
+			.catch(err => console.log(err));
+		
 	</script>
 </body>
 </html>

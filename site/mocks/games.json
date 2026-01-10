@@ -1,0 +1,58 @@
+[
+  {
+    "day": "Saturday",
+    "time": "4:30 ET",
+    "matchup": "Carolina @ Tampa Bay",
+    "location": null,
+    "broadcast": "ESPN/ABC",
+    "announcers": "Chris Fowler, Dan Orlovsky, Louis Riddick"
+  },
+  {
+    "day": "Saturday",
+    "time": "8:00 ET",
+    "matchup": "Seattle @ San Francisco",
+    "location": null,
+    "broadcast": "ESPN/ABC",
+    "announcers": "Joe Buck, Troy Aikman"
+  },
+  {
+    "day": "Sunday",
+    "time": "Night",
+    "matchup": "Baltimore @ Pittsburgh",
+    "location": null,
+    "broadcast": "NBC",
+    "announcers": null
+  },
+  {
+    "day": "Sunday",
+    "time": "LATE",
+    "matchup": "Washington @ Philadelphia",
+    "location": null,
+    "broadcast": "CBS",
+    "announcers": "Kevin Harlan, Ross Tucker"
+  },
+  {
+    "day": "Sunday",
+    "time": "EARLY",
+    "matchup": "Dallas @ NY Giants",
+    "location": null,
+    "broadcast": "FOX",
+    "announcers": "Kevin Kugler, Daryl Johnston"
+  },
+  {
+    "day": "Sunday",
+    "time": "LATE",
+    "matchup": "Detroit @ Chicago",
+    "location": null,
+    "broadcast": "FOX",
+    "announcers": "Kevin Burkhardt, Tom Brady"
+  },
+  {
+    "day": "Sunday",
+    "time": "EARLY",
+    "matchup": "Green Bay @ Minnesota",
+    "location": null,
+    "broadcast": "CBS",
+    "announcers": "Spero Dedes, Adam Archuleta"
+  }
+]

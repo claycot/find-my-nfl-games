@@ -17,7 +17,7 @@ def main():
     # scraper = cloudscraper.create_scraper()
     # page_text = scraper.get("https://506sports.com/nfl.php?yr=2025&wk=18").text
     # For offline testing, use:
-    with open("week1.html") as f: page_text = f.read()
+    with open("week18.html") as f: page_text = f.read()
 
     soup = BeautifulSoup(page_text, "html.parser")
 
