@@ -11,6 +11,7 @@ class GameInfo(TypedDict):
     location: Optional[str]
     broadcast: str
     announcers: str
+    coordinates: Optional[Tuple[int, int]]
 
 def main() -> list[GameInfo]:
     # Temp dir that mirrors s3
@@ -91,7 +92,8 @@ def find_local_game(
     found_game = None
     # if the game is in the legend, we found it!
     if pixel_RGBA in legend:
-        found_game = legend[pixel_RGBA]
+        found_game = legend[pixel_RGBA].copy()
+        found_game["coordinates"] = coordinates
     # otherwise, search with an expanding radius
     else:
         found_game = search_nearby_pixels(coordinates, pixels, dimensions, legend)
@@ -127,7 +129,8 @@ def search_nearby_pixels(
                 pixel = pixels[x, y]
 
                 if pixel in legend:
-                    found_game = legend[pixel]
+                    found_game = legend[pixel].copy()
+                    found_game["coordinates"] = (x, y)
                     # print(f"found game {found_game} at radius {radius}")
                     return found_game
 

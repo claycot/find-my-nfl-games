@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<title>Find My NFL Games | Results</title>
 	<link rel="stylesheet" href="results.css">
 </head>
+
 <body>
 	<h1>Results</h1>
-	<p>You selected: <span id="coords"></span></p>
+	<p>Your selection is indicated with a red marker. Local broadcasts are provided based on the blue marker(s) shown.</p>
+
+	<canvas id="map-coords"></canvas>
 
 	<div class="table-container">
 		<table id="games-table">
@@ -25,56 +29,167 @@
 	</div>
 
 	<script>
+		// input validation
 		const queryString = window.location.search;
-
 		const urlParams = new URLSearchParams(queryString);
-		
+
 		if (urlParams.size !== 1) {
 			throw new Error("Incorrect number of parameters.");
 		}
-		
+
 		const coords = urlParams.keys().next().value.split(",");
 
 		if (coords.length !== 2) {
 			throw new Error("Failed to process coordinates.");
 		}
 
-		document.getElementById("coords").textContent = [...coords];
+		const selectedX = Number(coords[0]);
+		const selectedY = Number(coords[1]);
 
+		if (Number.isNaN(selectedX) || Number.isNaN(selectedY)) {
+			throw new Error("Coordinates must be numbers.");
+		}
+
+
+		// fetch data (mocked or live)
 		const isDev = location.hostname === "localhost";
-
 		const url = isDev
-		? "/mocks/games.json"
-		: "https://api.example.com/data";
+			? "/mocks/games.json"
+			: "https://api.example.com/data";
 
-		fetch(url)
-			.then(res => res.json())
-			.then(data => {
+			
+		// set up cropped image
+		const canvas = document.getElementById("map-coords");
+		const ctx = canvas.getContext("2d");
+
+		const img = new Image();
+		img.src = "./img/us-map.png";
+
+		const CROP_SIZE = 100;
+		const HALF = CROP_SIZE / 2;
+
+		// wait for fetch and image to draw
+		Promise.all([
+			fetch(url).then(res => {
+				if (!res.ok) {
+					throw new Error("Failed to fetch game data.");
+				}
+				return res.json();
+			}),
+			new Promise(resolve => {
+				img.onload = resolve;
+				img.onerror = () => {
+					throw new Error("Failed to load map image.");
+				};
+			})
+		])
+			.then(([data]) => {
+				// add games to table and draw coordinates on cropped map
 				const tbody = document.querySelector("#games-table tbody");
+				const matchedCoords = [];
 
 				data.forEach(game => {
-				const tr = document.createElement("tr");
+					if (
+						Array.isArray(game.coordinates) &&
+						game.coordinates.length === 2
+					) {
+						matchedCoords.push(game.coordinates);
+					}
 
-				const cells = [
-					game.day,
-					game.time,
-					game.matchup,
-					game.broadcast,
-					game.announcers ?? "",
-					game.location ?? "",
-				];
+					const tr = document.createElement("tr");
 
-				cells.forEach(value => {
-					const td = document.createElement("td");
-					td.textContent = value;
-					tr.appendChild(td);
+					const cells = [
+						game.day,
+						game.time,
+						game.matchup,
+						game.broadcast,
+						game.announcers ?? "",
+						game.location ?? "",
+					];
+
+					cells.forEach(value => {
+						const td = document.createElement("td");
+						td.textContent = value;
+						tr.appendChild(td);
+					});
+
+					tbody.appendChild(tr);
 				});
 
-				tbody.appendChild(tr);
+				if (!matchedCoords.length) {
+					console.warn("No coordinates to render.");
+					return;
+				}
+
+
+				// calculate coordinates for crop
+				const rawSx = selectedX - HALF;
+				const rawSy = selectedY - HALF;
+
+				const sx = Math.max(0, Math.min(rawSx, img.width - CROP_SIZE));
+				const sy = Math.max(0, Math.min(rawSy, img.height - CROP_SIZE));
+
+				canvas.width = CROP_SIZE;
+				canvas.height = CROP_SIZE;
+
+
+				// draw crop
+				ctx.drawImage(
+					img,
+					sx, sy,
+					CROP_SIZE, CROP_SIZE,
+					0, 0,
+					CROP_SIZE, CROP_SIZE
+				);
+
+
+				// draw original input marker on crop
+				drawPinpointAt(
+					ctx,
+					selectedX - sx,
+					selectedY - sy,
+					"red",
+				);
+
+
+				// draw matched game markers on crop
+				matchedCoords.forEach(([cx, cy]) => {
+					const markerX = cx - sx;
+					const markerY = cy - sy;
+
+					// safety for markers outside of crop area
+					if (
+						markerX < 0 || markerX > CROP_SIZE ||
+						markerY < 0 || markerY > CROP_SIZE
+					) {
+						return;
+					}
+
+					drawPinpointAt(ctx, markerX, markerY);
 				});
 			})
-			.catch(err => console.log(err));
-		
+			.catch(err => {
+				console.error(err);
+				alert(err.message);
+			});
+
+		// add a circle crosshair to map
+		function drawPinpointAt(ctx, x, y, color = "#1a73e8") {
+			// outer ring
+			ctx.beginPath();
+			ctx.arc(x, y, 6, 0, Math.PI * 2);
+			ctx.strokeStyle = color;
+			ctx.lineWidth = 1.5;
+			ctx.stroke();
+
+			// center dot
+			ctx.beginPath();
+			ctx.arc(x, y, 2.5, 0, Math.PI * 2);
+			ctx.fillStyle = color;
+			ctx.fill();
+		}
 	</script>
+
 </body>
+
 </html>

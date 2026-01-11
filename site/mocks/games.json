@@ -29,7 +29,11 @@
     "matchup": "Washington @ Philadelphia",
     "location": null,
     "broadcast": "CBS",
-    "announcers": "Kevin Harlan, Ross Tucker"
+    "announcers": "Kevin Harlan, Ross Tucker",
+    "coordinates": [
+      1065,
+      330
+    ]
   },
   {
     "day": "Sunday",
@@ -37,7 +41,11 @@
     "matchup": "Dallas @ NY Giants",
     "location": null,
     "broadcast": "FOX",
-    "announcers": "Kevin Kugler, Daryl Johnston"
+    "announcers": "Kevin Kugler, Daryl Johnston",
+    "coordinates": [
+      1065,
+      330
+    ]
   },
   {
     "day": "Sunday",
@@ -45,7 +53,11 @@
     "matchup": "Detroit @ Chicago",
     "location": null,
     "broadcast": "FOX",
-    "announcers": "Kevin Burkhardt, Tom Brady"
+    "announcers": "Kevin Burkhardt, Tom Brady",
+    "coordinates": [
+      1065,
+      330
+    ]
   },
   {
     "day": "Sunday",
@@ -53,6 +65,10 @@
     "matchup": "Green Bay @ Minnesota",
     "location": null,
     "broadcast": "CBS",
-    "announcers": "Spero Dedes, Adam Archuleta"
+    "announcers": "Spero Dedes, Adam Archuleta",
+    "coordinates": [
+      1065,
+      330
+    ]
   }
 ]
