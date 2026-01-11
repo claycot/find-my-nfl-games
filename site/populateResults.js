@@ -59,6 +59,7 @@ Promise.all([
         // add games to table and draw coordinates on cropped map
         const tbody = document.querySelector("#games-table tbody");
         const matchedCoords = [];
+        let showAltLocations = false;
 
         data.forEach(game => {
             if (
@@ -66,6 +67,10 @@ Promise.all([
                 game.coordinates.length === 2
             ) {
                 matchedCoords.push(game.coordinates);
+            }
+
+            if (game.location) {
+                showAltLocations = true;
             }
 
             const tr = document.createElement("tr");
@@ -87,6 +92,17 @@ Promise.all([
 
             tbody.appendChild(tr);
         });
+
+        // remove location col if no alt location games present
+        if (!showAltLocations) {
+            const table = document.getElementById("games-table");
+
+            table.querySelector("thead th:last-child")?.remove();
+
+            table.querySelectorAll("tbody tr").forEach(tr => {
+                tr.lastElementChild?.remove();
+            });
+        }
 
 
         // calculate coordinates for crop
