@@ -116,11 +116,6 @@
 					tbody.appendChild(tr);
 				});
 
-				if (!matchedCoords.length) {
-					console.warn("No coordinates to render.");
-					return;
-				}
-
 
 				// calculate coordinates for crop
 				const rawSx = selectedX - HALF;
@@ -170,8 +165,8 @@
 			})
 			.catch(err => {
 				console.error(err);
-				alert(err.message);
 			});
+
 
 		// add a circle crosshair to map
 		function drawPinpointAt(ctx, x, y, color = "#1a73e8") {
@@ -191,5 +186,4 @@
 	</script>
 
 </body>
-
 </html>
